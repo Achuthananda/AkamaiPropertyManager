@@ -390,7 +390,10 @@ class AkamaiProperty():
         originlist = []
         for behavior in behaviorParsedList:
             if behavior["behavior"]["name"] == 'origin':
-                originlist.append(behavior["behavior"]["options"]['hostname'])
+                if behavior["behavior"]["options"]['originType'] == 'CUSTOMER':
+                    originlist.append(behavior["behavior"]["options"]['hostname'])
+                else:
+                    originlist.append(behavior["behavior"]["options"]['netStorage']['downloadDomainName'])
         originlist = list(dict.fromkeys(originlist))
         return originlist
 
