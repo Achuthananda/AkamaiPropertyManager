@@ -528,6 +528,30 @@ class AkamaiPropertyManager():
 
         return propList
 
+    def bulkSearch(self,jsonPath):
+        bulkSearchEP = '/papi/v1/bulk/rules-search-requests-synch'
+
+        data = {}
+        data['bulkSearchQuery'] = {}
+        data['bulkSearchQuery']['syntax'] = 'JSONPATH'
+        data['bulkSearchQuery']['match'] = jsonPath
+
+        json_data = json.dumps(data)
+
+        if self.accountSwitchKey:
+            params = {'accountSwitchKey':self.accountSwitchKey}
+            version_info = self._prdHttpCaller.postResult(bulkSearchEP,json_data,params)
+        else:
+            version_info = self._prdHttpCaller.postResult(bulkSearchEP,json_data)
+
+        propertiesList = []
+        if version_info[0] == 200:
+            for items in version_info[1]['results']:
+                propertiesList.append(items['propertyName'])
+            return propertiesList
+        else:
+            return []
+    
     def getallProperties(self):
         propertylist = []
         groupIds = self.getGroups()
