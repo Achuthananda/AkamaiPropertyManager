@@ -19,7 +19,7 @@ with open(os.path.join(project_root, 'README.md'), encoding='utf-8') as f:
 
 setuptools.setup(
      name=PACKAGE_NAME,
-     version='2.1.1',
+     version='2.2',
      author="Achuthananda M P",
      author_email="achuthadivine@gmail.com",
      description="A Pip Package for Akamai Property",
