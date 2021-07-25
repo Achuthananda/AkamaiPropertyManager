@@ -470,6 +470,8 @@ class AkamaiPropertyManager():
         self._prdHttpCaller = EdgeGridHttpCaller(self._session, debug, verbose, self._baseurl_prd)
         if accountSwitchKey:
             self.accountSwitchKey = accountSwitchKey
+        
+        return None
 
     def getGroups(self):
         groupsList = []
@@ -528,13 +530,15 @@ class AkamaiPropertyManager():
 
         return propList
 
-    def bulkSearch(self,jsonPath):
+    def bulkSearch(self,jsonPathMatch,jsonPathQualifiers=None):
         bulkSearchEP = '/papi/v1/bulk/rules-search-requests-synch'
 
         data = {}
         data['bulkSearchQuery'] = {}
         data['bulkSearchQuery']['syntax'] = 'JSONPATH'
-        data['bulkSearchQuery']['match'] = jsonPath
+        data['bulkSearchQuery']['match'] = jsonPathMatch
+        if jsonPathQualifiers:
+            data['bulkSearchQuery']['bulkSearchQualifiers'] = jsonPathQualifiers
 
         json_data = json.dumps(data)
 
