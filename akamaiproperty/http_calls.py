@@ -63,7 +63,6 @@ class EdgeGridHttpCaller():
             error_msg += "ERROR: Please ensure that the credentials you created for this script\n"
             error_msg += "ERROR: have the necessary permissions in the Luna portal.\n"
             error_msg += "ERROR: Problem details: %s\n" % details
-            exit(error_msg)
 
         if status_code in [400, 401]:
             error_msg = "ERROR: Call to %s failed with a %s result\n" % (endpoint, status_code)
@@ -80,7 +79,7 @@ class EdgeGridHttpCaller():
             error_msg += "ERROR: Please ensure that the URL you're calling is valid and correctly formatted\n"
             error_msg += "ERROR: or look at other examples to make sure yours matches.\n"
             error_msg += "ERROR: Problem details: %s\n" % details
-            exit(error_msg)
+            #exit(error_msg)
 
         error_string = None
         if "errorString" in result:
@@ -96,7 +95,7 @@ class EdgeGridHttpCaller():
             error_msg = "ERROR: Call caused a server fault.\n"
             error_msg += "ERROR: Please check the problem details for more information:\n"
             error_msg += "ERROR: Problem details: %s\n" % error_string
-            exit(error_msg)
+            #exit(error_msg)
 
     def postResult(self, endpoint, body, parameters=None):
         """ Executes a GET API call and returns the JSON output """

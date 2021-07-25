@@ -507,11 +507,12 @@ class AkamaiPropertyManager():
         params['groupId'] = group_id
         if self.accountSwitchKey:
             params["accountSwitchKey"] = self.accountSwitchKey
-
-        getcpCodesJson = self._prdHttpCaller.getResult(ep,parameters=params)
-        print(getcpCodesJson)
-        for items in getcpCodesJson["cpcodes"]["items"]:
-            cpCodeList.append(items["cpcodeId"])
+        try:
+            getcpCodesJson = self._prdHttpCaller.getResult(ep,parameters=params)
+            for items in getcpCodesJson["cpcodes"]["items"]:
+                cpCodeList.append(items["cpcodeId"])
+        except Exception as e:
+            return []
 
     def getPropertiesofGroup(self,contractid,groupid):
         ep = '/papi/v1/properties'
@@ -520,15 +521,18 @@ class AkamaiPropertyManager():
         params['groupId'] = groupid
         if self.accountSwitchKey:
             params["accountSwitchKey"] = self.accountSwitchKey
-
-        getpropertiesJson = self._prdHttpCaller.getResult(ep,parameters=params)
         
-        propList = []
-        if len(getpropertiesJson['properties']['items']) != 0:
-            for prop in getpropertiesJson['properties']['items']:
-                propList.append(prop['propertyName'])
+        try: 
+            getpropertiesJson = self._prdHttpCaller.getResult(ep,parameters=params)
+            propList = []
+            if len(getpropertiesJson['properties']['items']) != 0:
+                for prop in getpropertiesJson['properties']['items']:
+                    propList.append(prop['propertyName'])
+            return propList
 
-        return propList
+        except Exception as e:
+            return []
+        
 
     def bulkSearch(self,jsonPathMatch,jsonPathQualifiers=None):
         bulkSearchEP = '/papi/v1/bulk/rules-search-requests-synch'
@@ -542,26 +546,29 @@ class AkamaiPropertyManager():
 
         json_data = json.dumps(data)
 
-        if self.accountSwitchKey:
-            params = {'accountSwitchKey':self.accountSwitchKey}
-            version_info = self._prdHttpCaller.postResult(bulkSearchEP,json_data,params)
-        else:
-            version_info = self._prdHttpCaller.postResult(bulkSearchEP,json_data)
+        try:
+            if self.accountSwitchKey:
+                params = {'accountSwitchKey':self.accountSwitchKey}
+                version_info = self._prdHttpCaller.postResult(bulkSearchEP,json_data,params)
+            else:
+                version_info = self._prdHttpCaller.postResult(bulkSearchEP,json_data)
 
-        propertiesList = []
-        if version_info[0] == 200:
-            for items in version_info[1]['results']:
-                propertiesList.append(items['propertyName'])
-            return propertiesList
-        else:
+            propertiesList = []
+            if version_info[0] == 200:
+                for items in version_info[1]['results']:
+                    propertiesList.append(items['propertyName'])
+                return propertiesList
+            else:
+                return []
+        except Exception as e:
             return []
     
     def getallProperties(self):
         propertylist = []
         groupIds = self.getGroups()
         contractIds = self.getContracts()
-        for grp in groupIds:
-            for ctr in contractIds:
+        for ctr in contractIds:
+            for grp in groupIds:
                 property_list = self.getPropertiesofGroup(ctr,grp)
                 if len(property_list) != 0:
                     for x in property_list:
