@@ -584,8 +584,6 @@ class AkamaiPropertyManager():
             params["accountSwitchKey"] = self.accountSwitchKey
         try:
             getcbJson = self._prdHttpCaller.getResult(ep,parameters=params)
-            print(len(getcbJson["customBehaviors"]["items"]))
-            #print(getcbJson["customBehaviors"]["items"])
             for item in getcbJson["customBehaviors"]["items"]:                
                 cbList[item['name']] =  item['behaviorId']
             return cbList
@@ -606,5 +604,6 @@ class AkamaiPropertyManager():
                 coList[items['name']] =  items['overrideId']
             return coList
         except Exception as e:
+            print('Exception:',e)
             return []
         
