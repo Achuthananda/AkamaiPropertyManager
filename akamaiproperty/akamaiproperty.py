@@ -513,6 +513,7 @@ class AkamaiPropertyManager():
                 cpCodeList.append(items["cpcodeId"])
         except Exception as e:
             return []
+        return cpCodeList
 
     def getPropertiesofGroup(self,contractid,groupid):
         ep = '/papi/v1/properties'
@@ -574,3 +575,36 @@ class AkamaiPropertyManager():
                     for x in property_list:
                         propertylist.append(x)
         return propertylist
+
+    def getCustomBehaviors(self):
+        cbList = {}
+        ep = '/papi/v1/custom-behaviors'
+        params = {}
+        if self.accountSwitchKey:
+            params["accountSwitchKey"] = self.accountSwitchKey
+        try:
+            getcbJson = self._prdHttpCaller.getResult(ep,parameters=params)
+            print(len(getcbJson["customBehaviors"]["items"]))
+            #print(getcbJson["customBehaviors"]["items"])
+            for item in getcbJson["customBehaviors"]["items"]:                
+                cbList[item['name']] =  item['behaviorId']
+            return cbList
+        except Exception as e:
+            print('Exception:',e)
+            return []
+
+
+    def getCustomOverrides(self):
+        coList = {}
+        ep = '/papi/v1/custom-overrides'
+        params = {}
+        if self.accountSwitchKey:
+            params["accountSwitchKey"] = self.accountSwitchKey
+        try:
+            getcoJson = self._prdHttpCaller.getResult(ep,parameters=params)
+            for items in getcoJson["customOverrides"]["items"]:
+                coList[items['name']] =  items['overrideId']
+            return coList
+        except Exception as e:
+            return []
+        
