@@ -318,7 +318,6 @@ class AkamaiProperty():
         behaviorParsedList = self._condition_json1 + self._condition_json
         return behaviorParsedList
 
-    
     def getAvailableFeatures(self,version):
         if self._invalidconfig == True:
             print("No Configuration Found")
@@ -482,6 +481,7 @@ class AkamaiPropertyManager():
             getgroupJson = self._prdHttpCaller.getResult(ep,params)
         else:
             getgroupJson = self._prdHttpCaller.getResult(ep)
+        print(getgroupJson)
         for items in getgroupJson["groups"]["items"]:
             groupsList.append(items["groupId"])
         return groupsList
